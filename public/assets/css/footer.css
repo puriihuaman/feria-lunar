@@ -1,0 +1,30 @@
+.footer {
+    --columns: 1;
+
+    padding: 2rem 0;
+    color: var(--color-slate-50);
+    background-color: var(--color-blue-950);
+}
+.footer__content {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+
+    @media (min-width: 768px) {
+        --columns: 2;
+    }
+
+    @media (min-width: 1024px) {
+        --columns: 3;
+    }
+}
+
+.widget,
+.widget-1 {
+    padding: 0;
+}
+
+.widget-title {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-lg);
+}
