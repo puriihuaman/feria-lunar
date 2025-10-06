@@ -33,4 +33,18 @@ class SedeStand extends Model
     public function reservas(): HasMany {
         return $this->hasMany(Reserva::class, 'sede_stand_id');
     }
+
+    public function statusToDate(string $date): string
+    {
+        $reserva = $this->reservas()
+            ->where('reservation_date', $date)
+            ->whereIn('status', [\App\Models\Reserva::STATUS_PENDING, \App\Models\Reserva::STATUS_PAID])
+            ->first();
+
+        if (!$reserva) {
+            return 'free';
+        }
+
+        return $reserva->status;
+    }
 }

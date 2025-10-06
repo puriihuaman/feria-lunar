@@ -73,6 +73,16 @@
 }
 
 /* Sede info */
+.title {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-black);
+    margin-bottom: calc(var(--spacing) * 2);
+}
+
+.subtitle {
+    font-size: var(--text-xl);
+    margin-bottom: calc(var(--spacing) * 2);
+}
 
 .sede-info {
     display: grid;
@@ -105,16 +115,30 @@
 }
 
 /* Grid de stands */
+.form-reserva {
+    padding-top: calc(var(--spacing) * 4);
+    & form {
+        display: flex;
+        flex-direction: column;
+        gap: calc(var(--spacing) * 4);
+    }
+
+    & button {
+        cursor: pointer;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
 .stand-select-group {
     --size: 32px;
     --category-standard: #af53f9;
-    --category-food: #ebc124;
+    --category-food: var(--color-amber-400);
     --category-color: var(--category-standard);
-    --select-color: #6181af;
+    --select-color: var(--color-blue-500);
 
-    --status-free: #1bc358;
-    --status-reserved: #fb923c;
-    --status-busy: #ec4753;
+    --status-free: var(--color-green-400);
+    --status-reserved: var(--color-orange-400);
+    --status-paid: var(--color-rose-400);
     --status-color: var(--status-free);
 
     display: grid;
@@ -139,11 +163,16 @@
         margin: 0;
         width: 100%;
         height: 100%;
-        color: black;
         font-weight: bold;
         display: flex;
         justify-content: center;
         align-items: center;
+
+        &.pending,
+        &.paid {
+            cursor: no-drop;
+            user-select: none;
+        }
     }
 
     & .stand-radio-input {
@@ -197,24 +226,73 @@
             --category-color: var(--category-food);
         }
 
+        &.pending,
+        &.paid {
+            cursor: no-drop;
+            user-select: none;
+        }
+
         &.free {
             --status-color: var(--status-free);
         }
 
-        &.busy {
-            --status-color: var(--status-busy);
+        &.paid {
+            --status-color: var(--status-paid);
         }
 
-        &.reserved {
+        &.pending {
             --status-color: var(--status-reserved);
         }
     }
 }
 
-/* borrar */
+/* FEchas tabs */
+.fechas-tabs {
+    --gap-size: calc(var(--spacing) * 3);
+    display: flex;
+    margin-bottom: calc(var(--spacing) * 4);
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--gap-size, 1rem);
 
-.selectedDate {
-    background-color: red;
+    @media (min-width: 768px) {
+        --gap-size: 1rem;
+    }
+
+    & .fecha-tab {
+        --min-width: 80px;
+        --space: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        cursor: pointer;
+        flex: 0 0 var(--min-width);
+        background-color: var(--color-slate-50);
+        padding: var(--space);
+        border-radius: 10px;
+        transition: 0.3s;
+        border-width: 2px;
+        border-style: solid;
+        border-color: var(--color-slate-200);
+        border-image: initial;
+        font-size: var(--text-lg);
+
+        @media (min-width: 768px) {
+            --min-width: 100px;
+            --space: 1.5rem;
+        }
+
+        &.active {
+            color: var(--color-blue-50);
+            transform: translateY(-2px);
+            box-shadow: var(--color-blue-300) 0px 4px 15px;
+            background-color: var(--color-blue-500);
+            border-color: var(--color-blue-500);
+            font-weight: var(--font-weight-extrabold);
+        }
+    }
 }
 
 /* formulario de usuario */
@@ -257,9 +335,4 @@
     background-color: var(--color-blue-500);
     color: var(--color-blue-50);
     padding: 0.5rem 1rem;
-}
-
-.ocupado {
-    background-color: red;
-    cursor: none;
 }

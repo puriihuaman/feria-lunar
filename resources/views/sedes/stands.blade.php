@@ -4,14 +4,14 @@
 
 @section('body-content')
 
-<h1>{{ $sede->title }}</h1>
+<h1 class="title">{{ $sede->title }}</h1>
 
 
-<h2>Fechas disponibles:</h2>
-<div class="d-flex gap-3 mb-4">
+<h2 class="subtitle">Fechas disponibles:</h2>
+<div class="fechas-tabs">
     @foreach($availableDates as $date)
     <a href="{{ route('sedes.stands', ['id' => $sede->id, 'fecha' => $date->toDateString()]) }}"
-       class="btn {{ $selectedDate === $date->toDateString() ? 'selectedDate' : 'btn-outline-primary' }}">
+       class="fecha-tab {{ $selectedDate === $date->toDateString() ? 'active' : 'btn-outline-primary' }}">
         {{ $date->format('d M Y') }}
     </a>
 @endforeach
@@ -30,6 +30,7 @@
             ->where('reservation_date', $selectedDate)
             ->whereIn('status', ['PENDING', 'PAID'])
             ->exists();
+          $status = $sedeStand->statusToDate($selectedDate);
         @endphp
         <div class="stand-radio-option">
           <input 
@@ -39,11 +40,11 @@
             value={{ $sedeStand->id }} 
             {{ $reservaActiva ? 'disabled' : '' }}
             data-price={{ $sedeStand->price }}" 
-            class="stand-radio-input {{ $sedeStand->stand->category }} {{ $reservaActiva ? 'ocupado' : 'libre' }}" />
+            class="stand-radio-input {{ $sedeStand->stand->category }} {{ $status }}" />
           <label 
             for="stand_{{ $sedeStand->id }}" 
-            class="stand-radio-label {{ $reservaActiva ? 'ocupado' : 'libre' }}"
-            title="Stand {{ $sedeStand->stand->booth_number}} -{{ $sedeStand->stand->category }} -{{ $sedeStand->price }}">
+            class="stand-radio-label {{ $status }}"
+            title="Stand {{ $sedeStand->stand->booth_number}} - {{ $sedeStand->stand->category }} - {{ $sedeStand->price }} ({{ $status }})">
             {{ $sedeStand->stand->booth_number }}
           </label>
       </div>
