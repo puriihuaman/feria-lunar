@@ -1340,3 +1340,71 @@
     margin-right: auto;
     overflow: hidden;
 }
+
+/* Tabla Admin Reservas */
+
+.table {
+    width: 100%;
+    font-size: var(--text-sm);
+    text-align: left;
+    color: var(--color-slate-600);
+    /* w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 */
+}
+.table__container {
+    position: relative;
+    overflow-x: auto;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-lg);
+    /* relative overflow-x-auto shadow-md sm:rounded-lg */
+}
+
+.table__head {
+    font-size: var(--text-xs);
+    color: var(--color-slate-700);
+    text-transform: uppercase;
+    background-color: var(--color-slate-100);
+    /* text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 */
+
+    & th {
+        padding: calc(var(--spacing) * 2) var(--spacing);
+        /* px-6 py-3 */
+    }
+}
+
+.table__row {
+    border-bottom: 1px solid var(--color-slate-300);
+    background-color: var(--color-slate-50);
+    /* bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 */
+}
+
+.table__data {
+    /* w-6 p-4 */
+    padding: calc(var(--spacing) * 4) calc(var(--spacing) * 2);
+}
+.table__data--id {
+    padding: calc(var(--spacing) * 2);
+}
+
+.badge {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    margin: auto;
+    min-width: 60px;
+    padding: 0 calc(var(--spacing) * 2);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: capitalize;
+
+    &.paid {
+        background-color: var(--color-green-400);
+
+        /* inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 inset-ring inset-ring-green-500/20 */
+    }
+
+    &.pending {
+        background-color: var(--color-amber-400);
+    }
+}

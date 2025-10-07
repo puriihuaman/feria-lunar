@@ -34,4 +34,15 @@ Route::get('/reservas/create', [ReservaController::class, 'create'])->name('rese
 Route::post('/reservas/store', [ReservaController::class, 'store'])->name('reservas.store');
 
 Route::get('/reservas/success/{reserva}', [ReservaController::class, 'success'])->name('reservas.success');
+
+// Route::middleware() // o el middleware que uses para admin
+//     ->prefix('admin')
+//     ->group(function () {
+//         Route::get('/', [ReservaController::class, 'adminIndex'])->name('admin.index');
+//         Route::patch('/reservas/{reserva}/status', [ReservaController::class, 'updateStatus'])->name('admin.updateStatus');
+//     });
+
+Route::get('/admin', [ReservaController::class, 'adminIndex'])->name('admin.index');
+Route::patch('/admin/{reserva}/status', [ReservaController::class, 'updateStatus'])->name('admin.updateStatus');
+
 Route::view('/terms', 'terms')->name('terms');

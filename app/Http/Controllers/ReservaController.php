@@ -92,4 +92,36 @@ class ReservaController
         // $available = Reserva::isAvailable($request->sede_stand_id, $request->date);
         // return response()->json(['available' => $available]);
     }
+
+    public function adminIndex() {
+        // $reservas = Reserva::with(['sedeStand.stand', 'user', 'sedeStand.sede'])
+        //     ->orderBy('reservation_date', 'desc')
+        //     ->get();
+
+        // return view('admin.index', compact('reservas'));
+
+        $reservas = Reserva::with(['sedeStand.stand', 'sedeStand.sede'])->orderBy('reservation_date', 'desc')->get();
+
+        return view('admin.index', compact('reservas'));
+    }
+
+    public function updateStatus(Request $request, Reserva $reserva)
+    {
+        // $validated = $request->validate([
+        //     'status' => 'required|in:PENDING,PAID,CANCELLED',
+        // ]);
+
+        // $reserva->update(['status' => $validated['status']]);
+
+        // return redirect()->route('admin.index')->with('success', 'Estado actualizado correctamente.');
+
+
+        $validated = $request->validate([
+            'status' => 'required|in:PENDING,PAID,CANCELLED',
+        ]);
+
+        $reserva->update(['status' => $validated['status']]);
+
+        return redirect()->route('admin.index')->with('success', 'Estado actualizado correctamente.');
+    }
 }
