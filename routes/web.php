@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 // mostrar vista estática -> empieza desde resources/views
 // view(ruta, vista)
-Route::view('/', 'welcome')->name('welcome');
+Route::view('/', 'index')->name('index');
 Route::view('sedes','sedes.index')->name('sedes');
 // Route::view('sedes/sede-apupal','sedes.sede-apupal')->name('apupal');
 // Route::view('sedes/sede-surco','sedes.sede-surco')->name('surco');

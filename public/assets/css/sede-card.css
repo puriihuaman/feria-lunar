@@ -1,10 +1,11 @@
-.sedes {
+.sedes-grid {
     --columns: 1;
     --space: 1.5rem;
 
     display: grid;
     grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
     gap: var(--space);
+    padding: calc(var(--spacing) * 4) 0;
 
     @media (min-width: 768px) {
         --columns: 2;
@@ -13,7 +14,7 @@
 }
 
 .card {
-    border: 1px solid var(--color-slate-300);
+    border: 1px solid var(--color-slate-100);
     box-shadow: var(--shadow-md);
     display: flex;
     flex-direction: column;
@@ -58,8 +59,8 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--color-blue-500);
-    color: var(--color-blue-50);
+    background-color: var(--color-fuchsia-500);
+    color: var(--color-fuchsia-50);
     padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
     border-radius: var(--radius-2xl);
     margin: auto auto 0;
@@ -68,7 +69,7 @@
     min-width: 100px;
 
     &:hover {
-        background-color: var(--color-blue-600);
+        background-color: var(--color-fuchsia-600);
     }
 }
 
@@ -332,7 +333,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--color-blue-500);
-    color: var(--color-blue-50);
+    background-color: var(--color-fuchsia-500);
+    color: var(--color-fuchsia-50);
     padding: 0.5rem 1rem;
 }

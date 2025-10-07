@@ -4,7 +4,7 @@
 
 @section('body-content')
 
-<div class="">
+<div class="container">
   <h2>Gestión de Reservas</h2>
 
   <div class="table__container">

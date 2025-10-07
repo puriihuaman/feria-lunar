@@ -3,6 +3,7 @@
 @section('document-title', 'Sede Apupal')
 
 @section('body-content')
+<div class="container">
 
 <h1 class="title">{{ $sede->title }}</h1>
 
@@ -108,3 +109,4 @@
   });
   </script>
 @endsection
+</div>

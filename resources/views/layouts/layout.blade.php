@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ asset('assets/image/feria_lunar_icon_moon_light.svg') }}" sizes="192x192">
 
     <title>@yield('document-title')</title>
 
@@ -23,9 +24,9 @@
     @include('layouts._partials.header')
 
     <main>
-      <div class="container">
-        @yield('body-content')
-      </div>
+      @yield('body-content')
+      {{-- <div class="container">
+      </div> --}}
     </main>
 
     @include('layouts._partials.footer')
