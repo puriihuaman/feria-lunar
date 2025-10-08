@@ -1437,14 +1437,21 @@
     font-weight: var(--font-weight-medium);
     text-transform: capitalize;
 
-    &.paid {
+    /* paid */
+    &.success {
         background-color: var(--color-green-400);
 
         /* inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 inset-ring inset-ring-green-500/20 */
     }
 
-    &.pending {
+    /* pending */
+    &.warning {
         background-color: var(--color-amber-400);
+    }
+
+    /* canceled|expired */
+    &.danger {
+        background-color: var(--color-slate-200);
     }
 }
 

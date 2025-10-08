@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReservaRequest;
+use App\Jobs\SendAddedReservationEmail;
 use App\Jobs\SendCancelledReservationEmail;
 use App\Jobs\SendPaidReservationEmail;
 use App\Mail\PaidReservationMail;
@@ -27,8 +28,8 @@ class ReservaController
 
     public function store(StoreReservaRequest $request)
     {
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             // lock fila para evitar concurrencia
             $sedeStand = SedeStand::where('id', $request->sede_stand_id)->lockForUpdate()->firstOrFail();
 
@@ -45,7 +46,7 @@ class ReservaController
             }
 
             // crear reserva
-            $reserva = Reserva::create([
+            $reservation = Reserva::create([
                 'sede_stand_id' => $sedeStand->id,
                 'reservation_date' => $request->reservation_date,
                 'price' => $sedeStand->price,
@@ -55,11 +56,13 @@ class ReservaController
                 'email' => $request['email'] ?? null,
                 'phone' => $request['phone'] ?? null,
             ]);
-            DB::commit();
-            Mail::to($reserva->email)->send(new ReservaCreadaMail($reserva->load('sedeStand.sede', 'sedeStand.stand')));
-            // Mail::to($reserva->email)->send(new ReservaCreadaMail($reserva));
 
-            return redirect()->route('reservas.success', ['reserva' => $reserva->id])->with('success', 'Reserva registrada correctamente.');
+            $reservation->load('sedeStand.sede', 'sedeStand.stand');
+            $this->dispatchNotificationEmail($reservation, Reserva::STATUS_PENDING);
+            
+            DB::commit();
+
+            return redirect()->route('reservas.success', ['reserva' => $reservation->id])->with('success', 'Reserva registrada correctamente.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al registrar reserva', [
@@ -68,7 +71,6 @@ class ReservaController
             ]);
             return back()->withErrors(['error' => 'No se pudo completar la reserva. Por favor, inténtelo nuevamente o contacte con soporte.'])->withInput();
         }
-
     }
 
     // Vista de éxito
@@ -78,45 +80,33 @@ class ReservaController
         return view('reservas.success', compact('reserva'));
     }
 
-    // API simple para chequear disponibilidad
-    public function checkAvailability(Request $request)
-    {
-        // $request->validate(['sede_stand_id' => 'required|exists:sede_stands,id', 'date' => 'required|date']);
-        // $available = Reserva::isAvailable($request->sede_stand_id, $request->date);
-        // return response()->json(['available' => $available]);
-    }
-
     public function adminIndex() {
-        // $reservas = Reserva::with(['sedeStand.stand', 'user', 'sedeStand.sede'])
-        //     ->orderBy('reservation_date', 'desc')
-        //     ->get();
-
-        // return view('admin.index', compact('reservas'));
-
         $reservas = Reserva::with(['sedeStand.stand', 'sedeStand.sede'])->orderBy('reservation_date', 'desc')->get();
 
-        return view('admin.index', compact('reservas'));
+        return view('admin.index', ['reservas' => $reservas, 'statuses' => Reserva::selectableStatuses()]);
     }
 
-    public function updateStatus(Request $request, Reserva $reserva)
+    public function updateStatus(Request $request, Reserva $reservation)
     {
         $validated = $request->validate([
-            'status' => 'required|in:pending,paid,cancelled',
+            'status' => 'required|in:pending,paid,canceled',
         ]);
 
-        $oldStatus = $reserva->status;
+        $oldStatus = $reservation->status;
         $newStatus = $validated['status'];
 
         try {
             DB::beginTransaction();
 
-            $reserva->update(['status' => $newStatus]);
+            $reservation->update(['status' => $newStatus]);
+            $reservation->refresh();
+            $reservation->load('sedeStand.sede', 'sedeStand.stand');
 
-            $this->dispatchNotificationEmail($reserva, $newStatus);
+            $this->dispatchNotificationEmail($reservation, $newStatus);
             DB::commit();
 
             Log::info('Estado de reserva actualizado', [
-                'reserva_id' => $reserva->id,
+                'reserva_id' => $reservation->id,
                 'old_status' => $oldStatus,
                 'new_status' => $newStatus,
             ]);
@@ -127,8 +117,8 @@ class ReservaController
 
             Log::error('Error al enviar correo de confirmación de reserva', [
                 'exception' => $e,
-                'reserva_id' => $reserva->id,
-                'email' => $reserva->email,
+                'reserva_id' => $reservation->id,
+                'email' => $reservation->email,
             ]);
 
             return redirect()->route('admin.index')->with('warning', 'El estado fue actualizado, pero no se pudo enviar el correo al cliente.');
@@ -137,12 +127,13 @@ class ReservaController
 
     public function dispatchNotificationEmail(Reserva $reservation, string $status): void {
         match($status) {
+            Reserva::STATUS_PENDING => SendAddedReservationEmail::dispatch($reservation),
             Reserva::STATUS_PAID => SendPaidReservationEmail::dispatch($reservation),
             Reserva::STATUS_CANCELED => SendCancelledReservationEmail::dispatch($reservation),
-            default => null, // PENDING no envía email
+            default => Log::warning('Estado no reconocido para envío de email', [
+                'status' => $status,
+                'reserva_id' => $reservation->id,
+            ]),
         };
-        // if ($reservation->status === Reserva::STATUS_PAID) {
-        //     Mail::to($reservation->email)->send(new PaidReservationMail($reservation));
-        // }
     }
 }

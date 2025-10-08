@@ -43,6 +43,6 @@ Route::get('/reservas/success/{reserva}', [ReservaController::class, 'success'])
 //     });
 
 Route::get('/admin', [ReservaController::class, 'adminIndex'])->name('admin.index');
-Route::patch('/admin/{reserva}/status', [ReservaController::class, 'updateStatus'])->name('admin.updateStatus');
+Route::patch('/admin/{reservation}/status', [ReservaController::class, 'updateStatus'])->name('admin.updateStatus');
 
 Route::view('/terms', 'terms')->name('terms');

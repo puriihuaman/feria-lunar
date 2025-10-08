@@ -39,18 +39,23 @@
                 {{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}
               </td>
               <td class="table__data">
-                <span class="badge {{ $reserva->status }}">
-                    {{ $reserva->status }}
+                <span class="badge {{ $reserva->isPaid() ? 'success' : ($reserva->isPending() ? 'warning' : 'danger') }}">
+                  {{ $reserva->status_label }}
                 </span>
+                {{-- <span class="badge {{ $reserva->status }}">
+                    {{ $reserva->status_label  }}
+                </span> --}}
               </td>
                 <td class="table__data">
                   <form action="{{ route('admin.updateStatus', $reserva->id) }}" method="POST">
                       @csrf
                       @method('PATCH')
                       <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                        <option value="pending" {{ $reserva->status === 'PENDING' ? 'selected' : '' }}>Pendiente</option>
-                        <option value="paid" {{ $reserva->status === 'PAID' ? 'selected' : '' }}>Pagado</option>
-                        <option value="canceled" {{ $reserva->status === 'CANCELED' ? 'selected' : '' }}>Cancelado</option>
+                        @foreach ($statuses as $value => $label)
+                        <option value="{{ $value }}" {{ $reserva->status === $value ? 'selected' : '' }}>
+                          {{ $label }}
+                        </option>
+                        @endforeach
                       </select>
                   </form>
                 </td>

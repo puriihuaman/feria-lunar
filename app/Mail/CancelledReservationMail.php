@@ -13,18 +13,21 @@ use Illuminate\Queue\SerializesModels;
 class CancelledReservationMail extends Mailable
 {
     use Queueable, SerializesModels;
+    public $sede;
+    public $stand;
 
     /**
      * Create a new message instance.
      */
     public function __construct(public Reserva $reservation)
     {
-        //
+        $this->sede = optional($reservation->sedeStand->sede);
+        $this->stand = optional($reservation->sedeStand->stand);
     }
 
     public function build()
     {
-        return $this->subject('Reserva Cancelada - ' . config('app.name'))->view('emails.cancelled');
+        return $this->subject('Reserva Cancelada - ' . config('app.name'))->markdown('emails.canceled')->with(['reserva' => $this->reservation, 'sede' => $this->sede, 'stand' => $this->stand]);
     }
 
     /**
@@ -33,7 +36,7 @@ class CancelledReservationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Cancelled Reservation Mail',
+            subject: 'Reserva Cancelada - ' . config('app.name'),
         );
     }
 
@@ -43,7 +46,7 @@ class CancelledReservationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            markdown: 'emails.canceled',
         );
     }
 

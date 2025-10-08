@@ -24,7 +24,6 @@ class SendCancelledReservationEmail implements ShouldQueue
      */
     public function __construct(public Reserva $reservation)
     {
-        //
     }
 
     /**
@@ -33,17 +32,19 @@ class SendCancelledReservationEmail implements ShouldQueue
     public function handle(): void
     {
         try {
-            Mail::to($this->reservation->email)->send(new CancelledReservationMail($this->reservation));
+            $reservation = $this->reservation->fresh(['sedeStand.sede', 'sedeStand.stand']);
+            Mail::to($reservation->email)->send(new CancelledReservationMail($reservation));
             
             Log::info('Email de reserva cancelada enviado', [
-                'reserva_id' => $this->reservation->id,
-                'email' => $this->reservation->email,
+                'reserva_id' => $reservation->id,
+                'email' => $reservation->email,
             ]);
         } catch (\Throwable $e) {
             Log::error('Error al enviar email de reserva cancelada', [
                 'reserva_id' => $this->reservation->id,
                 'email' => $this->reservation->email,
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
             
             throw $e;

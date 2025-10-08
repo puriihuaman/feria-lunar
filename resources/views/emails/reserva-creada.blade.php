@@ -1,61 +1,41 @@
-{{-- <x-mail::message>
-# Introduction
-
-The body of your message.
-
-<x-mail::button :url="''">
-Button Text
-</x-mail::button> --}}
-
-{{-- Thanks,<br>
-{{ config('app.name') }}
-</x-mail::message> --}}
-
-
 @component('mail::message')
-# ¡Su reserva ha sido registrada con éxito! 🎉
+# 📝 ¡Reserva Registrada! 🎉
 
-**Buenos días/tardes, {{ $reserva->name }} {{ $reserva->surname }}**
+**Hola, {{ $reserva->name }} {{ $reserva->surname }}**
 
-Les saluda **Feria Lunar 🌙**
-
-¡Su reserva ha sido registrada con éxito!  
-Para asegurar su participación en la próxima edición de la feria del **{{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}**, solo falta completar el pago correspondiente.
+Tu reserva ha sido **registrada correctamente** para la feria del **{{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}**.  
+Para confirmar tu participación, debes **realizar el pago completo** dentro del plazo establecido.
 
 ---
 
-## 🏢 Información del Stand Reservado
-**Sede:** {{ $reserva->sedeStand->sede->title }}  
-**Dirección:** {{ $reserva->sedeStand->sede->address }}  
-**Stand N°:** {{ $reserva->sedeStand->stand->booth_number }}  
-**Categoría:** {{ ucfirst($reserva->sedeStand->stand->category) }}  
-**Total:** S/ {{ number_format($reserva->sedeStand->price, 2) }}
+## 🧾 Detalles de la Reserva:
+**🏠 Sede:** {{ $sede->title }}  
+**📍 Ubicación:** {{ $sede->address }}  
+**🪧 Stand N°:** {{ $stand->booth_number }}  
+**🏷️ Categoría:** {{ ucfirst($stand->category) }}  
+**💰 Total:** S/ {{ number_format($reserva->price, 2) }}
 
 ---
 
-📍 **Ubicación del evento:**  
-{{ $reserva->sedeStand->sede->address }}  
-
-🛍️ **Tu stand incluye:**
-- 1 toldo de 2x2 m  
+## 🛍️ Incluye:
+- 1 toldo (2x2 m)  
 - 1 mesa  
 - 1 silla  
-
-💰 **Total a pagar:** S/ {{ number_format($reserva->price, 2) }}  
-📅 **Fecha:** {{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}  
-🕓 *(Trabajamos todos los domingos)*
+📅 **Día del evento:** {{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}  
+🕓 *Feria activa los domingos*
 
 ---
-🎫 Código de validación: {{ $reserva->key_code }}
 
-🔒 Importante:
-El código de validación es personal e intransferible.
-No lo compartas con nadie, ya que garantiza la seguridad y autenticidad de tu reserva.
+## 🎫 Código de validación:  
+**{{ $reserva->key_code }}**  
+Este código es **personal e intransferible**.  
+Inclúyelo como mensaje al momento de enviar tu comprobante de pago.
+
+---
 
 @component('mail::panel')
-Para completar su reserva, realice el pago completo escaneando el siguiente código QR, como mensaje incluye el código de validación.  
-
-📸 **Escanea el siguiente código QR para completar tu pago:**
+### 💳 Pago de Reserva
+Realiza el pago a través de **Yape** escaneando el siguiente código QR, como mensaje incluye el código de validación.  
 
 <div style="text-align:center; margin: 20px 0;">
     <img src="{{ $message->embed(public_path('assets/image/yape_qr.png')) }}" 
@@ -63,24 +43,22 @@ Para completar su reserva, realice el pago completo escaneando el siguiente cód
          style="max-width:250px;">
 </div>
 
-📱 Número para Yape:
-906542477
+📱 **Número Yape:** 906542477
 @endcomponent
 
 ---
-Una vez realizado el pago, envía el comprobante por WhatsApp al mismo número (906542477) junto con el código único de validación:
 
-⏳ **Importante:**  
-Dispone de **1 hora** para realizar el pago desde el momento de la reserva.  
-Pasado este tiempo, el espacio quedará liberado automáticamente y podrá ser asignado a otro expositor.
+## ⏳ Importante:
+- Tienes **1 hora** para realizar el pago desde el momento de la reserva.  
+- Pasado este tiempo, el stand será **liberado automáticamente**.  
+- Envía el comprobante de pago por **WhatsApp** al número **906542477**, junto con tu código de validación.
 
-Una vez confirmado el pago, recibirá un nuevo correo con la confirmación final de su stand y los detalles de ubicación dentro del plano del evento.
+Una vez confirmado el pago, recibirás un **correo final de confirmación** con los detalles de tu stand y ubicación dentro del evento.
 
 ---
 
-Gracias por ser parte de **Feria Lunar**,  
-el espacio donde sus productos destacan y sus ventas crecen 🚀
+Gracias por confiar en **{{ config('app.name') }}** 🌙  
+**El equipo de {{ config('app.name') }}**
 
-Saludos cordiales,  
-**Equipo Feria Lunar**
+*Este es un mensaje automático. Por favor, no respondas a este correo.*
 @endcomponent

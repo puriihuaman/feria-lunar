@@ -13,15 +13,16 @@ use Illuminate\Queue\SerializesModels;
 class ReservaCreadaMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $reserva;
+    public $sede;
+    public $stand;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Reserva $reserva)
+    public function __construct(public Reserva $reservation)
     {
-        //
-        $this->reserva = $reserva;
+        $this->sede = optional($reservation->sedeStand->sede);
+        $this->stand = optional($reservation->sedeStand->stand);
     }
 
     public function build()
@@ -30,7 +31,9 @@ class ReservaCreadaMail extends Mailable
                     ->markdown('emails.reserva-creada')
                     ->text('emails.reserva-creada-plain')
                     ->with([
-                        'reserva' => $this->reserva,
+                        'reserva' => $this->reservation,
+                        'sede' => $this->sede,
+                        'stand' => $this->stand
                     ]);
     }
 
@@ -40,7 +43,7 @@ class ReservaCreadaMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reserva Creada FeriaLunar',
+            subject: 'Reserva Agendada - Feria Lunar',
         );
     }
 
