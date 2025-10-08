@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Reserva;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,9 +15,6 @@ class ReservaCreadaMail extends Mailable
     public $sede;
     public $stand;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct(public Reserva $reservation)
     {
         $this->sede = optional($reservation->sedeStand->sede);

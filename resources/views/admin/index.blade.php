@@ -27,7 +27,9 @@
             <tr class="table__row">
               <td class="table__data--id">{{ $reserva->id }}</td>
               <td class="table__data">{{ $reserva->key_code }}</td>
-              <td class="table__data">{{ $reserva->name ?? 'N/A' }}</td>
+              <td class="table__data">
+                {{ $reserva->name ?? 'N/A' }} {{ $reserva->surname }}
+              </td>
               <td class="table__data">{{ $reserva->phone ?? 'N/A' }}</td>
               <td class="table__data">
                 {{ $reserva->sedeStand->stand->booth_number ?? 'N/A' }}
@@ -42,9 +44,6 @@
                 <span class="badge {{ $reserva->isPaid() ? 'success' : ($reserva->isPending() ? 'warning' : 'danger') }}">
                   {{ $reserva->status_label }}
                 </span>
-                {{-- <span class="badge {{ $reserva->status }}">
-                    {{ $reserva->status_label  }}
-                </span> --}}
               </td>
                 <td class="table__data">
                   <form action="{{ route('admin.updateStatus', $reserva->id) }}" method="POST">

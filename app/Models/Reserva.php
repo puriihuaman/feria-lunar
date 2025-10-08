@@ -71,7 +71,6 @@ class Reserva extends Model
         ];
     }
 
-    // ✅ Método para verificar estado
     public function isPending(): bool
     {
         return $this->status === self::STATUS_PENDING;
@@ -92,12 +91,21 @@ class Reserva extends Model
         return $this->status === self::STATUS_EXPIRED;
     }
 
-    // public static function statuses(): array
-    // {
-    //     return [
-    //         self::STATUS_PENDING => 'Pendiente',
-    //         self::STATUS_PAID => 'Pagado',
-    //         self::STATUS_CANCELED => 'Cancelado',
-    //     ];
-    // }
+    /**
+     * Scope para reservas activas (que bloquean disponibilidad)
+    */
+    public function scopeActive($query)
+    {
+        return $query->whereIn('status', [
+            self::STATUS_PENDING,
+            self::STATUS_PAID
+        ]);
+    }
+
+    /**
+     * Scope para verificar disponibilidad de un stand en una fecha
+    */
+    public function scopeForStandAndDate($query, int $sedeStandId, string $date) {
+        return $query->where('sede_stand_id', $sedeStandId)->where('reservation_date', $date);
+    }
 }

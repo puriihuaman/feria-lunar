@@ -6,18 +6,15 @@ use App\Http\Requests\StoreReservaRequest;
 use App\Jobs\SendAddedReservationEmail;
 use App\Jobs\SendCancelledReservationEmail;
 use App\Jobs\SendPaidReservationEmail;
-use App\Mail\PaidReservationMail;
-use App\Mail\ReservaCreadaMail;
 use App\Models\Reserva;
 use App\Models\SedeStand;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 class ReservaController
 {
-    //
     public function create(Request $request)
     {
         $sedeStand = SedeStand::with(['stand', 'sede'])->findOrFail($request->sede_stand_id);
@@ -28,33 +25,29 @@ class ReservaController
 
     public function store(StoreReservaRequest $request)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-            // lock fila para evitar concurrencia
             $sedeStand = SedeStand::where('id', $request->sede_stand_id)->lockForUpdate()->firstOrFail();
-
-            // consulta de disponibilidad (dentro de la transacción)
-            $exists = Reserva::where('sede_stand_id', $sedeStand->id)
-                ->where('reservation_date', $request->reservation_date)
-                ->whereIn('status', [Reserva::STATUS_PENDING, Reserva::STATUS_PAID])
-                ->exists();
-
-            if ($exists) {
+            
+            if (!$sedeStand->isAvailableOn($request->reservation_date)) {
                 return back()->withErrors([
                     'stand_id' => 'Este stand ya ha sido reservado para la fecha seleccionada.'
                 ])->withInput();
             }
 
-            // crear reserva
+            if(!$sedeStand->hasValidPrice()) {
+                return back()->withErrors(['stand_id', 'El stand seleccionado no tiene un precio válido configurado.'])->withInput();
+            }
+
             $reservation = Reserva::create([
                 'sede_stand_id' => $sedeStand->id,
                 'reservation_date' => $request->reservation_date,
                 'price' => $sedeStand->price,
                 'status' => Reserva::STATUS_PENDING,
-                'name' => $request['name'] ?? null,
-                'surname' => $request['surname'] ?? null,
-                'email' => $request['email'] ?? null,
-                'phone' => $request['phone'] ?? null,
+                'name' => $request->name,
+                'surname' => $request->surname,
+                'email' => $request->email,
+                'phone' => $request->phone,
             ]);
 
             $reservation->load('sedeStand.sede', 'sedeStand.stand');
@@ -62,18 +55,35 @@ class ReservaController
             
             DB::commit();
 
+            Log::info('Reserva creada exitosamente', [
+                'reserva_id' => $reservation->id,
+                'sede_stand_id' => $sedeStand->id,
+                'user_email' => $request->email,
+            ]);
+
             return redirect()->route('reservas.success', ['reserva' => $reservation->id])->with('success', 'Reserva registrada correctamente.');
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+
+            Log::warning('Stand no encontrado al crear reserva', [
+                'sede_stand_id' => $request->sede_stand_id,
+            ]);
+    
+            return back()
+                ->withErrors(['stand_id' => 'El stand seleccionado no existe.'])
+                ->withInput();
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al registrar reserva', [
-                'exception' => $e,
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
                 'user_data' => $request->only(['name', 'email', 'sede_stand_id', 'reservation_date']),
             ]);
-            return back()->withErrors(['error' => 'No se pudo completar la reserva. Por favor, inténtelo nuevamente o contacte con soporte.'])->withInput();
+            return back()->withErrors(['error' => 'No se pudo completar la reserva. Por favor, inténtelo nuevamente.'])->withInput();
         }
     }
 
-    // Vista de éxito
     public function success($id)
     {
         $reserva = Reserva::with('sedeStand.stand', 'sedeStand.sede')->findOrFail($id);

@@ -47,4 +47,26 @@ class SedeStand extends Model
 
         return $reserva->status;
     }
+
+    public function isAvailableOn(string $date): bool {
+        return !Reserva::forStandAndDate($this->id, $date)->active()->exists();
+    }
+
+    /**
+     * Obtener las fechas ocupadas del stand
+     */
+    public function getBookedDates(string $startDate, string $endDate): array
+    {
+        return Reserva::where('sede_stand_id', $this->id)
+            ->whereBetween('reservation_date', [$startDate, $endDate])
+            ->active()
+            ->pluck('reservation_date')
+            ->map(fn($date) => $date->format('Y-m-d'))
+            ->toArray();
+    }
+
+    public function hasValidPrice(): bool
+    {
+        return $this->price !== null && $this->price > 0;
+    }
 }
