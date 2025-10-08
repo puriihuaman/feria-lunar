@@ -23,34 +23,39 @@
         </tr>
       </thead>
         <tbody>
-            @foreach($reservas as $reserva)
+          @foreach($reservas as $reserva)
             <tr class="table__row">
-                
               <td class="table__data--id">{{ $reserva->id }}</td>
               <td class="table__data">{{ $reserva->key_code }}</td>
               <td class="table__data">{{ $reserva->name ?? 'N/A' }}</td>
               <td class="table__data">{{ $reserva->phone ?? 'N/A' }}</td>
-              <td class="table__data">{{ $reserva->sedeStand->stand->booth_number ?? 'N/A' }}</td>
-              <td class="table__data">{{ $reserva->sedeStand->sede->title ?? 'N/A' }}</td>
-              <td class="table__data">{{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}</td>
+              <td class="table__data">
+                {{ $reserva->sedeStand->stand->booth_number ?? 'N/A' }}
+              </td>
+              <td class="table__data">
+                {{ $reserva->sedeStand->sede->title ?? 'N/A' }}
+              </td>
+              <td class="table__data">
+                {{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}
+              </td>
               <td class="table__data">
                 <span class="badge {{ $reserva->status }}">
                     {{ $reserva->status }}
                 </span>
               </td>
                 <td class="table__data">
-                    <form action="{{ route('admin.updateStatus', $reserva->id) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                            <option value="PENDING" {{ $reserva->status === 'PENDING' ? 'selected' : '' }}>Pendiente</option>
-                            <option value="PAID" {{ $reserva->status === 'PAID' ? 'selected' : '' }}>Pagado</option>
-                            <option value="CANCELLED" {{ $reserva->status === 'CANCELLED' ? 'selected' : '' }}>Cancelado</option>
-                        </select>
-                    </form>
+                  <form action="{{ route('admin.updateStatus', $reserva->id) }}" method="POST">
+                      @csrf
+                      @method('PATCH')
+                      <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="pending" {{ $reserva->status === 'PENDING' ? 'selected' : '' }}>Pendiente</option>
+                        <option value="paid" {{ $reserva->status === 'PAID' ? 'selected' : '' }}>Pagado</option>
+                        <option value="canceled" {{ $reserva->status === 'CANCELED' ? 'selected' : '' }}>Cancelado</option>
+                      </select>
+                  </form>
                 </td>
             </tr>
-            @endforeach
+          @endforeach
         </tbody>
     </table>
   </div>

@@ -29,7 +29,7 @@ class Reserva extends Model
 
     public const STATUS_PENDING = 'pending';
     public const STATUS_PAID = 'paid';
-    public const STATUS_CANCELADO = 'canceled';
+    public const STATUS_CANCELED = 'canceled';
     public const STATUS_EXPIRADO = 'expired';
 
     public function sedeStand(): BelongsTo {
