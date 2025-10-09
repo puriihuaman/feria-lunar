@@ -8,7 +8,7 @@ Tu reserva ha sido **cancelada automáticamente** al no completarse el pago dent
 ---
 
 ## 🧾 Detalles de la Reserva:
-**🆔 ID:** {{ $reserva->id }}  
+**🆔 ID:** {{ $reserva->key_code }}  
 **⚙️ Estado:** Cancelada  
 **🏠 Sede:** {{ $sede->title }}  
 **📍 Ubicación:** {{ $sede->address }}  
