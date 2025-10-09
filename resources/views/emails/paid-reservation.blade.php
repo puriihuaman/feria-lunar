@@ -21,7 +21,7 @@ Tu stand en **{{ $sede->title }}** queda **confirmado y reservado**.
 Este código será solicitado al ingresar al evento.  
 **No lo compartas con nadie.**  
 
-**Código:** `{{ $reserva->key_code }}`
+**Código:** **{{ $reserva->key_code }}**
 
 ---
 

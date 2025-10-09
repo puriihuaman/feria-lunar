@@ -45,6 +45,40 @@ class Reserva extends Model
                 ->exists();
     }
 
+    public static function findByKeyCode(string $keyCode): ?self
+    {
+        return self::where('key_code', strtoupper($keyCode))->first();
+    }
+
+    public static function generateKeyCode(): string 
+    {
+        do {
+            $characters = 'BCDFGHJKLMNPQRSTVWXYZ23456789';
+            $code = '';
+
+            for ($i=0; $i < 8; $i++) { 
+                $code .= $characters[rand(0, strlen($characters) - 1)];
+            }
+
+            $keyCode = substr($code, 0, 4) . '-' . substr($code, 4, 4) . '-FL';
+
+            $exists = self::where('key_code', $keyCode)->exists();
+        } while($exists);
+
+        return $keyCode;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($reservation) {
+            if (empty($reservation->key_code)) {
+                $reservation->key_code = self::generateKeyCode();
+            }
+        });
+    }
+
     protected function statusLabel(): Attribute
     {
         return Attribute::make(

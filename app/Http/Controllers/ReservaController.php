@@ -57,8 +57,8 @@ class ReservaController
 
             Log::info('Reserva creada exitosamente', [
                 'reserva_id' => $reservation->id,
+                'key_code' => $reservation->key_code,
                 'sede_stand_id' => $sedeStand->id,
-                'user_email' => $request->email,
             ]);
 
             return redirect()->route('reservas.success', ['reserva' => $reservation->id])->with('success', 'Reserva registrada correctamente.');
@@ -84,6 +84,18 @@ class ReservaController
         }
     }
 
+    public function verify(string $keyCode)
+    {
+        $reservation = Reserva::findByKeyCode($keyCode);
+
+        if(!$reservation) {
+            return back()->withErrors([
+                'code' => 'Código clave no válido'
+            ]);
+        }
+        return redirect()->route('admin.index')->with('success', 'Estado actualizado correctamente.');
+    }
+
     public function success($id)
     {
         $reserva = Reserva::with('sedeStand.stand', 'sedeStand.sede')->findOrFail($id);
@@ -102,7 +114,6 @@ class ReservaController
             'status' => 'required|in:pending,paid,canceled',
         ]);
 
-        $oldStatus = $reservation->status;
         $newStatus = $validated['status'];
 
         try {
@@ -116,9 +127,9 @@ class ReservaController
             DB::commit();
 
             Log::info('Estado de reserva actualizado', [
-                'reserva_id' => $reservation->id,
-                'old_status' => $oldStatus,
-                'new_status' => $newStatus,
+                'reserva_uuid' => $reservation->id,
+                'key_code' => $reservation->key_code,
+                'sede_stand_id' => $reservation->sedeStand->id,
             ]);
 
             return redirect()->route('admin.index')->with('success', 'Estado actualizado correctamente.');
