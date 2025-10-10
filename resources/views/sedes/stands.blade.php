@@ -20,15 +20,15 @@
     </div>
   </section>
 
-  <section class="reservation">
-    <h3 class="reservation__text">
+  <section class="stands">
+    <h3 class="stands__text">
       Stands disponibles para el 
       <strong>{{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }}</strong>
     </h3>
 
-    <div class="reservation__content--form">
-      <form action="{{ route('reservas.create') }}" method="GET" id="reservaForm" class="reservation__form form">
-        <div id="stand-select-group" class="form__field form__stand-grid">
+    <div class="stands__content--form">
+      <form action="{{ route('reservas.create') }}" method="GET" id="reservaForm" class="stand-form">
+        <div id="stand-select-group" class="stand-form__grid">
           @foreach($sede->sedeStands as $sedeStand)
             @php
               $reservaActiva = $sedeStand->reservas()
@@ -37,7 +37,7 @@
                 ->exists();
               $status = $sedeStand->statusToDate($selectedDate);
             @endphp
-            <div class="form__option-stand">
+            <div class="stand-form__item">
               <input 
                 type="radio" 
                 name="sede_stand_id" 
@@ -47,10 +47,10 @@
                 data-price={{ $sedeStand->price }}" 
                 required
                 readonly
-                class="form__radio-stand {{ $sedeStand->stand->category }} {{ $status }}" />
+                class="stand-form__radio {{ $sedeStand->stand->category }} {{ $status }}" />
               <label 
                 for="stand_{{ $sedeStand->id }}" 
-                class="form__label-stand {{ $status }}"
+                class="stand-form__label {{ $status }}"
                 title="Stand {{ $sedeStand->stand->booth_number}} - {{ $sedeStand->stand->category }} - {{ $sedeStand->price }} ({{ $status }})">
                 {{ $sedeStand->stand->booth_number }}
               </label>
@@ -59,18 +59,18 @@
         </div>
     
         {{-- Campo oculto para la fecha seleccionada --}}
-        <input type="hidden" name="selected_date_to_reserve" readonly value={{ $selectedDate }} class="form__selected-date--hidden">
+        <input type="hidden" name="selected_date_to_reserve" readonly value={{ $selectedDate }} class="stand-form__date-hidden">
     
         {{-- Botón único para enviar la reserva --}}
-        <div class="form__field">
-            <p id="form-legend" class="form__text-warning">Debe seleccionar un stand</p>
+        <div class="stand-form__field">
+            <p id="form-legend" class="stand-form__text-warning">Debe seleccionar un stand</p>
 
             <button 
               type="submit" 
               id="reserveBtn" 
               disabled 
-              class="button form__button disabled">
-              Reservar {{ $selectedDate }}
+              class="button stand-form__button disabled">
+              Reservar Ahora
             </button>
         </div>
       </form>

@@ -154,13 +154,13 @@
     }
 }
 
-/* Grid de stands - reservas */
-.reservation {
-    padding: calc(var(--spacing) * 2) 0;
+/* Grid de stands */
+.stands {
+    padding: calc(var(--spacing) * 4) 0;
     color: var(--color-zinc-800);
 }
 
-.reservation__text {
+.stands__text {
     color: var(--color-zinc-500);
 
     @media (min-width: 768px) {
@@ -168,22 +168,17 @@
     }
 }
 
-.reservation__content--form {
+.stands__content--form {
     padding-top: calc(var(--spacing) * 4);
 }
-.reservation__form {
+/* Formulario de stand */
+.stand-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: calc(var(--spacing) * 6);
-    padding: inherit 0;
 }
 
-.form__field {
-    width: 100%;
-    text-align: center;
-}
-.form__stand-grid {
+.stand-form__grid {
     --size: 32px;
     --category-standard: var(--color-purple-500);
     --category-food: var(--color-amber-500);
@@ -199,7 +194,8 @@
     grid-template-columns: repeat(auto-fit, minmax(var(--size), 1fr));
     gap: calc(var(--spacing) * 2);
 }
-.form__option-stand {
+
+.stand-form__item {
     position: relative;
     display: flex;
     justify-content: center;
@@ -207,7 +203,7 @@
     width: var(--size);
     height: var(--size);
 }
-.form__radio-stand {
+.stand-form__radio {
     --border-size: calc(var(--size) / 9);
     /* Add if not using autoprefixer */
     -webkit-appearance: none;
@@ -220,9 +216,8 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    /* z-index: -1; */
-    border: var(--border-size) solid;
-    border-color: var(--category-color);
+    padding: 0;
+    border: var(--border-size) solid var(--category-color);
     border-radius: var(--radius-4xl);
     background-color: var(--status-color);
 
@@ -276,7 +271,7 @@
         --status-color: var(--status-reserved);
     }
 }
-.form__label-stand {
+.stand-form__label {
     font-size: var(--text-sm);
     line-height: inherit;
     cursor: pointer;
@@ -296,7 +291,7 @@
         user-select: none;
     }
 }
-.form__selected-date--hidden {
+.stand-form__date-hidden {
     visibility: hidden;
     opacity: 0;
     width: 0;
@@ -306,7 +301,24 @@
     cursor: none;
     display: none;
 }
-.form__button {
+.stand-form__field {
+    text-align: center;
+}
+.stand-form__text-warning {
+    color: var(--color-zinc-500);
+    font-size: var(--text-sm);
+    transition: color, background-color, opacity, transform, 300ms ease-in;
+
+    &.hidden {
+        width: 0;
+        height: 0;
+        font-size: 0;
+        visibility: hidden;
+        opacity: 0;
+        display: none;
+    }
+}
+.stand-form__button {
     margin: calc(var(--spacing) * 2) auto auto;
     color: var(--color-fuchsia-50);
     background-color: var(--color-fuchsia-500);
@@ -325,54 +337,18 @@
         opacity: 0.6;
     }
 }
-.form__text-warning {
-    color: var(--color-zinc-500);
-    font-size: var(--text-sm);
-    transition: color, background-color, opacity, transform, 300ms ease-in;
 
-    &.hidden {
-        width: 0;
-        height: 0;
-        font-size: 0;
-        visibility: hidden;
-        opacity: 0;
-        display: none;
+/* Formulario global */
+form {
+    & input {
+        display: inline-block;
+        border: 1px solid var(--color-zinc-300);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
     }
 }
 
-/* formulario de usuario */
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: calc(var(--spacing) * 4);
-    padding: 1rem;
-
-    & a {
-        color: var(--color-blue-500);
-    }
-
-    & .mb-3 {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-
-        & label {
-            display: block;
-        }
-
-        & input {
-            display: inline-block;
-            border: 1px solid var(--color-zinc-300);
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-        }
-    }
-
-    & .form-check {
-        flex-direction: row;
-    }
-}
-
+/* Estilo global */
 .button {
     display: flex;
     justify-content: center;
@@ -380,10 +356,117 @@
     font-size: var(--text-base);
     font-family: inherit;
     line-height: inherit;
-    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
     transition: color, background-color, opacity, transform, 300ms ease-in;
 
     &:active {
         transform: scale(0.9);
     }
+}
+
+/* Formulario de reserva */
+.reservation {
+    color: var(--color-zinc-800);
+    padding: calc(var(--spacing) * 8) 0;
+}
+
+.reservation__content {
+    --columns: 1;
+
+    display: grid;
+    grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+    gap: calc(var(--spacing) * 4);
+
+    @media (min-width: 768px) {
+        --columns: 2;
+    }
+}
+
+.reservation__title {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-semibold);
+}
+
+.reservation__group {
+    padding: calc(var(--spacing) * 4);
+    border: 1px solid var(--color-zinc-200);
+}
+
+.info {
+}
+
+.info__title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    color: var(--color-zinc-500);
+}
+
+.info__card {
+    padding: calc(var(--spacing) * 4) 0 0;
+}
+
+.info__item {
+    margin-bottom: calc(var(--spacing) * 2);
+}
+
+.reservation__form-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    color: var(--color-zinc-500);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 4);
+
+    & a {
+        color: var(--color-fuchsia-500);
+    }
+
+    .form__field {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        gap: calc(var(--spacing) * 2);
+    }
+
+    .form__field--term {
+        flex-direction: row;
+    }
+
+    .form__button {
+        margin: calc(var(--spacing) * 2) auto auto;
+        color: var(--color-fuchsia-50);
+        background-color: var(--color-fuchsia-500);
+        cursor: pointer;
+        border-radius: var(--radius-lg);
+
+        &:hover {
+            color: var(--color-fuchsia-50);
+            background-color: var(--color-fuchsia-600);
+        }
+
+        &.disabled {
+            cursor: default;
+            color: var(--color-fuchsia-50);
+            background-color: var(--color-fuchsia-400);
+            opacity: 0.6;
+        }
+    }
+}
+
+.alert {
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    border-radius: var(--radius-lg);
+}
+
+.danger {
+    background: var(--color-rose-50);
+    color: var(--color-rose-700);
 }
