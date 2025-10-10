@@ -1,85 +1,140 @@
 @extends('layouts.layout')
 
-@section('document-title', 'Sede Apupal')
+@section('document-title', '')
 
 @section('body-content')
 <div class="container">
+  <section class="sede">
+    <h1 class="sede__title">{{ $sede->title }}</h1>
 
-<h1 class="title">{{ $sede->title }}</h1>
+    <h2 class="sede__subtitle">Fechas disponibles:</h2>
 
-
-<h2 class="subtitle">Fechas disponibles:</h2>
-<div class="fechas-tabs">
-    @foreach($availableDates as $date)
-    <a href="{{ route('sedes.stands', ['id' => $sede->id, 'fecha' => $date->toDateString()]) }}"
-       class="fecha-tab {{ $selectedDate === $date->toDateString() ? 'active' : 'btn-outline-primary' }}">
-        {{ $date->format('d M Y') }}
-    </a>
-@endforeach
-</div>
-
-<h3>
-  Stands disponibles para el {{ \Carbon\Carbon::parse($selectedDate)->format('d M Y') }}
-</h3>
-
-<div class="form-reserva">
-  <form action="{{ route('reservas.create') }}" method="GET" id="reservaForm">
-    <div id="stand-select-group" class="stand-select-group">
-      @foreach($sede->sedeStands as $sedeStand)
-        @php
-          $reservaActiva = $sedeStand->reservas()
-            ->where('reservation_date', $selectedDate)
-            ->whereIn('status', ['PENDING', 'PAID'])
-            ->exists();
-          $status = $sedeStand->statusToDate($selectedDate);
-        @endphp
-        <div class="stand-radio-option">
-          <input 
-            type="radio" 
-            name="sede_stand_id" 
-            id="stand_{{ $sedeStand->id }}" 
-            value={{ $sedeStand->id }} 
-            {{ $reservaActiva ? 'disabled' : '' }}
-            data-price={{ $sedeStand->price }}" 
-            class="stand-radio-input {{ $sedeStand->stand->category }} {{ $status }}" />
-          <label 
-            for="stand_{{ $sedeStand->id }}" 
-            class="stand-radio-label {{ $status }}"
-            title="Stand {{ $sedeStand->stand->booth_number}} - {{ $sedeStand->stand->category }} - {{ $sedeStand->price }} ({{ $status }})">
-            {{ $sedeStand->stand->booth_number }}
-          </label>
-      </div>
+    <div class="fechas-tabs">
+      @foreach($availableDates as $date)
+        <a 
+          href="{{ route('sedes.stands', ['id' => $sede->id, 'fecha' => $date->toDateString()]) }}"
+          class="fecha-tab {{ $selectedDate === $date->toDateString() ? 'active' : '' }}">
+            {{ $date->format('d/m/Y') }}
+        </a>
       @endforeach
     </div>
+  </section>
 
-    {{-- Campo oculto para la fecha seleccionada --}}
-    <input type="hidden" name="selected_date" value="{{ $selectedDate }}">
+  <section class="reservation">
+    <h3 class="reservation__text">
+      Stands disponibles para el 
+      <strong>{{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }}</strong>
+    </h3>
 
-    {{-- Botón único para enviar la reserva --}}
-    <div class="mt-3">
-        <button type="submit" id="reservarBtn" class="btn btn-success" style="display: none;">
-            Reservar
-        </button>
-    </div>
-  </form>
-</div>
-
-{{-- Info --}}
-
-<div class="sede-info">
-  <div class="sede-imagen-grande">
-    <div class="imagen-placeholder">📍 {{ $sede->title }}</div>
-  </div>
-  
-  <div class="sede-description">
-    <h2>{{ $sede->title }}</h2>
+    <div class="reservation__content--form">
+      <form action="{{ route('reservas.create') }}" method="GET" id="reservaForm" class="reservation__form form">
+        <div id="stand-select-group" class="form__field form__stand-grid">
+          @foreach($sede->sedeStands as $sedeStand)
+            @php
+              $reservaActiva = $sedeStand->reservas()
+                ->where('reservation_date', $selectedDate)
+                ->whereIn('status', ['pending', 'paid'])
+                ->exists();
+              $status = $sedeStand->statusToDate($selectedDate);
+            @endphp
+            <div class="form__option-stand">
+              <input 
+                type="radio" 
+                name="sede_stand_id" 
+                id="stand_{{ $sedeStand->id }}" 
+                value={{ $sedeStand->id }} 
+                {{ $reservaActiva ? 'disabled' : '' }}
+                data-price={{ $sedeStand->price }}" 
+                required
+                readonly
+                class="form__radio-stand {{ $sedeStand->stand->category }} {{ $status }}" />
+              <label 
+                for="stand_{{ $sedeStand->id }}" 
+                class="form__label-stand {{ $status }}"
+                title="Stand {{ $sedeStand->stand->booth_number}} - {{ $sedeStand->stand->category }} - {{ $sedeStand->price }} ({{ $status }})">
+                {{ $sedeStand->stand->booth_number }}
+              </label>
+          </div>
+          @endforeach
+        </div>
     
-    <div class="description-texto">
-      <p>{{ $sede->address }}</p>
-      <p><strong>Capacidad:</strong> {{ $sede->capacity }}</p>
+        {{-- Campo oculto para la fecha seleccionada --}}
+        <input type="hidden" name="selected_date_to_reserve" readonly value={{ $selectedDate }} class="form__selected-date--hidden">
+    
+        {{-- Botón único para enviar la reserva --}}
+        <div class="form__field">
+            <p id="form-legend" class="form__text-warning">Debe seleccionar un stand</p>
+
+            <button 
+              type="submit" 
+              id="reserveBtn" 
+              disabled 
+              class="button form__button disabled">
+              Reservar {{ $selectedDate }}
+            </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- LEYENDA DE UBICACIONES -->
+
+  <section class="legend">
+    <div class="status">
+      <div class="status__item">
+        <div class="status__symbol status__symbol--success"></div>
+        <div class="status__label">Libre</div>
+      </div>
+
+      <div class="status__item">
+        <div class="status__symbol status__symbol--warning"></div>
+        <div class="status__label">Reservado</div>
+      </div>
+
+      <div class="status__item">
+        <div class="status__symbol status__symbol--danger"></div>
+        <div class="status__label">Ocupado</div>
+      </div>
+    </div>
+
+    <div class="category">
+      <div class="category__item">
+        <div class="category__symbol category__symbol--standard"></div>
+        <div class="category__label">Estándar (S/100)</div>
+      </div>
+
+      <div class="category__item">
+        <div class="category__symbol category__symbol--food"></div>
+        <div class="category__label">Gastronomía (S/110)</div>
+      </div>
+    </div>
+  </section>
+
+  {{-- Info --}}
+  <div class="sede-info">
+    <div class="sede-info__image">
+      <picture>
+        <source 
+          srcset="{{ asset('assets/image/feria_lunar_stand.webp') }}, {{ asset('assets/image/feria_lunar_stand.jpg') }}"
+          loading="lazy"
+          />
+        <img 
+          src="assets/image/{{ asset($sede->image) }}" 
+          alt="{{ $sede->title }} - {{ $sede->address }}"
+          loading="lazy"
+        />
+      </picture>
+    </div>
+    
+    <div class="sede-info__details">
+      <h2 class="sede-info__title">{{ $sede->title }}</h2>
+      
+      <div class="sede-info__description">
+        <p>{{ $sede->address }}</p>
+        <p><strong>Capacidad:</strong> {{ $sede->capacity }}</p>
+      </div>
     </div>
   </div>
-</div>
 @endsection
 
 @section('footer-scripts')
@@ -87,13 +142,16 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
       const radios = document.querySelectorAll('input[name="sede_stand_id"]');
-      const reservarBtn = document.getElementById('reservarBtn');
+      const reserveBtn = document.getElementById('reserveBtn');
+      const formLegendWarning = document.getElementById('form-legend');
       const form = document.getElementById('reservaForm');
   
       radios.forEach(radio => {
           radio.addEventListener('change', function() {
             if (this.checked && !this.disabled) {
-              reservarBtn.style.display = 'block';
+              formLegendWarning.classList.add('hidden');
+              reserveBtn.removeAttribute("disabled");
+              reserveBtn.classList.remove('disabled');
             }
           });
       });

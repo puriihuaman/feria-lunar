@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ReservaController;
-use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SedeStandController;
 use App\Http\Controllers\StandController;
 use Illuminate\Support\Facades\Route;

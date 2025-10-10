@@ -18,9 +18,9 @@ class ReservaController
     public function create(Request $request)
     {
         $sedeStand = SedeStand::with(['stand', 'sede'])->findOrFail($request->sede_stand_id);
-        $selectedDate = $request->selected_date;
+        $selectedDateToReserve = $request->selected_date_to_reserve;
 
-        return view('reservas.create', compact('sedeStand', 'selectedDate'));
+        return view('reservas.create', compact('sedeStand', 'selectedDateToReserve'));
     }
 
     public function store(StoreReservaRequest $request)

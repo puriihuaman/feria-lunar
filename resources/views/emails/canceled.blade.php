@@ -11,7 +11,7 @@ Tu reserva ha sido **cancelada automáticamente** al no completarse el pago dent
 **🆔 ID:** {{ $reserva->key_code }}  
 **⚙️ Estado:** Cancelada  
 **🏠 Sede:** {{ $sede->title }}  
-**📍 Ubicación:** {{ $sede->address }}  
+**📍 Dirección:** {{ $sede->address }}  
 **📅 Fecha:** {{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}  
 **🪧 Stand N°:** {{ $stand->booth_number }}  
 **🏷️ Categoría:** {{ ucfirst($stand->category) }}  

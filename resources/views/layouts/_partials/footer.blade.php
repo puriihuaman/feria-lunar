@@ -4,7 +4,7 @@
       <div class="widget widget-1">
         <h6 class="widget-title">Dirección</h6>
         <p>
-          <strong>Sede San Borja</strong>: Av. Javier Prado con Av. Guardia Civil <br><em>Ref: Al frente de La Rambla de San Borja</em>
+          <strong>Sede San Borja</strong>: Av. Javier Prado con Av. Guardia Civil. <br><em>Ref: Al frente de La Rambla de San Borja</em>
         </p>
   
         <p>
@@ -15,7 +15,7 @@
       <div class="widget widget-2">
         <h6 class="widget-title">Contacto</h6>
         <p><strong>Celular</strong>: 906542477</p>
-        <p><strong>Correo</strong>: ferialunar.com</p>
+        <p><strong>Correo</strong>: ferialunar@ferialunar.com</p>
       </div>
       
       <div class="widget widget-3">

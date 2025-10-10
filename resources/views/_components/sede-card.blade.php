@@ -1,6 +1,18 @@
 <article class="card">
   <div class="thumbnail">
-    <img src="{{ asset($image) }}" alt="{{ $title . ' - ' . $address }}" class="image"/>
+    <picture>
+      <source 
+        srcset="{{ asset( 'assets/image/' . $image) }}, {{ asset('assets/image/feria_lunar_stand.jpg') }}"
+        loading="lazy"
+        />
+      <img 
+        src="{{ asset('assets/image/feria_lunar_stand.jpg') }}" 
+        alt="{{ $title }} - {{ $address }}"
+        loading="lazy"
+        class="image"
+      />
+    </picture>
+    {{-- <img src="{{ asset($image) }}" alt="{{ $title . ' - ' . $address }}" class="image"/> --}}
   </div>
 
   <div class="content">

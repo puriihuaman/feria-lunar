@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 
-@section('document-title', 'Sede Apupal')
+@section('document-title', config('app.name'))
 
 @section('body-content')
 
@@ -9,7 +9,7 @@
 <div class="banner">
     <div class="container banner__content">
         <div class="banner__left">
-            <p class="company">FERIA LUNAR</p>
+            <p class="company">{{ config('app.name') }}</p>
             <h2 class="">Tu negocio, tu espacio en Feria Lunar</h2>
             <p class="slogan">Moda accesible: Polos, camisas y pantalones para todos los gustos.</p>
             <a href="/sedes" class="banner-link" role="button">
@@ -65,7 +65,7 @@
       
       <section class="sedes-grid">
         @component('_components.sede-card')
-        @slot('image', 'assets/image/ferialunar-stand.jpg')
+        @slot('image', 'feria_lunar_stand.webp')
         @slot('title', 'Sede Apupal - Los Olivos')
         @slot('address', 'Av. Las Palmeras 3943, Los Olivos.')
         @slot('reference', 'A 1 cdra de la Municipalidad')
@@ -74,7 +74,7 @@
         @endcomponent
         
         @component('_components.sede-card')
-        @slot('image', 'assets/image/ferialunar-stand.jpg')
+        @slot('image', 'feria_lunar_stand.webp')
         @slot('title', 'Sede Surco - Surco')
         @slot('address', 'Av. Javier Prado con Av. Guardia Civil, Surco.')
         @slot('reference', 'Al frente de La Rambla de San Borja')

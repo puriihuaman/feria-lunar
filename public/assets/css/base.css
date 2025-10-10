@@ -1329,6 +1329,12 @@
     initial-value: "";
 }
 
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100dvh;
+}
+
 .container {
     --container-full: 100%;
 
@@ -1386,7 +1392,7 @@
     width: 100%;
     font-size: var(--text-sm);
     text-align: left;
-    color: var(--color-slate-600);
+    color: var(--color-zinc-600);
     /* w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 */
 }
 .table__container {
@@ -1399,9 +1405,9 @@
 
 .table__head {
     font-size: var(--text-xs);
-    color: var(--color-slate-700);
+    color: var(--color-zinc-700);
     text-transform: uppercase;
-    background-color: var(--color-slate-100);
+    background-color: var(--color-zinc-100);
     /* text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 */
 
     & th {
@@ -1411,8 +1417,8 @@
 }
 
 .table__row {
-    border-bottom: 1px solid var(--color-slate-300);
-    background-color: var(--color-slate-50);
+    border-bottom: 1px solid var(--color-zinc-300);
+    background-color: var(--color-zinc-50);
     /* bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 */
 }
 
@@ -1451,7 +1457,7 @@
 
     /* canceled|expired */
     &.danger {
-        background-color: var(--color-slate-200);
+        background-color: var(--color-zinc-200);
     }
 }
 
@@ -1464,7 +1470,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     min-height: var(--height);
-    color: var(--color-slate-50);
+    color: var(--color-zinc-50);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1537,7 +1543,7 @@
     /* mt-4 text-lg text-gray-200 */
     margin-top: calc(var(--spacing) * 4);
     font-size: var(--text-lg);
-    color: var(--color-slate-200);
+    color: var(--color-zinc-200);
 }
 
 .banner-link {
@@ -1570,36 +1576,33 @@
 .button-play {
     /* bg-white/30 backdrop-blur-sm rounded-full p-6 hover:bg-white/50 transition duration-300 */
     padding: calc(var(--spacing) * 6);
-    background-color: var(--color-slate-100);
+    background-color: var(--color-zinc-100);
     border-radius: 100%;
-    color: var(--color-slate-800);
+    color: var(--color-zinc-800);
 
     &:hover {
-        background-color: var(--color-slate-200);
+        background-color: var(--color-zinc-200);
     }
 }
 
 /* Características */
 .feature {
-    /* bg-white py-20 */
-    background-color: var(--color-slate-50);
-    padding: calc(var(--spacing) * 20) 0;
+    background-color: var(--color-zinc-50);
+    padding: calc(var(--spacing) * 6) 0;
 }
 
 .feature__container {
-    /* container mx-auto px-6 */
     margin-left: auto;
     margin-right: auto;
     padding: 0 calc(var(--spacing) * 4);
 }
 
 .feature__content {
-    /* grid grid-cols-1 md:grid-cols-3 gap-12 text-center */
     display: grid;
     grid-template-columns: 1fr;
     gap: calc(var(--spacing) * 12);
     text-align: center;
-    padding: calc(var(--spacing) * 8) 0;
+    padding: calc(var(--spacing) * 4) 0;
 
     @media (min-width: 768px) {
         grid-template-columns: repeat(3, 1fr);
@@ -1607,46 +1610,41 @@
 }
 
 .feature__item {
-    /* flex flex-col items-center */
     display: flex;
     flex-direction: column;
+    gap: calc(var(--spacing) * 2);
     align-items: center;
-    padding: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 8);
+    background-color: var(--color-fuchsia-100);
     box-shadow: var(--shadow-md);
 }
 
 .feature__icon {
-    /* flex items-center justify-center h-20 w-20 rounded-full bg-pink-100 text-pink-500 mb-4 */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(var(--spacing) * 20);
-    width: calc(var(--spacing) * 20);
-    background-color: var(--color-fuchsia-100);
-    border-radius: 100%;
+    background-color: var(--color-fuchsia-200);
+    border-radius: var(--radius-4xl);
     color: var(--color-fuchsia-400);
-    margin-bottom: calc(var(--spacing) * 2);
+    padding: calc(var(--spacing) * 4);
+    margin-bottom: calc(var(--spacing) * 4);
 }
 
 .feature__title {
-    /* text-2xl font-bold text-gray-800 mb-2 */
     font-size: var(--text-xl);
     font-weight: var(--font-weight-bold);
-    color: var(--color-slate-800);
-    margin-bottom: var(--spacing);
+    color: var(--color-zinc-800);
 }
 
 .feature__subtitle {
-    /* text-gray-600 */
-    color: var(--color-slate-600);
+    color: var(--color-zinc-600);
 }
 
 /* Sedes Home */
 .sedes {
-    color: var(--color-slate-800);
-    background-color: var(--color-slate-50);
-    padding: calc(var(--spacing) * 20) 0;
-    padding-top: 0;
+    color: var(--color-zinc-800);
+    background-color: var(--color-zinc-50);
+    padding: calc(var(--spacing) * 10) 0;
 
     & h2 {
         font-size: var(--text-3xl);
@@ -1658,8 +1656,108 @@
             font-size: var(--text-4xl);
         }
     }
-    & p {
-        text-align: center;
-        margin-bottom: calc(var(--spacing) * 6);
+}
+.sedes__title {
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    font-size: var(--text-4xl);
+
+    @media (min-width: 768px) {
+        font-size: var(--text-5xl);
     }
+}
+.sedes__container {
+    text-align: center;
+}
+
+/* Leyendas de ubicación */
+
+.legend {
+    --size-symbol: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: calc(var(--spacing) * 2);
+    color: var(--color-zinc-800);
+    padding: calc(var(--spacing) * 2) 0;
+}
+.status,
+.category {
+    width: min-content;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing);
+}
+.category__item,
+.status__item {
+    display: flex;
+    gap: var(--spacing);
+    align-items: center;
+}
+.status__symbol,
+.category__symbol {
+    width: var(--size-symbol);
+    height: var(--size-symbol);
+    border-radius: var(--radius-4xl);
+}
+
+.status__symbol--success {
+    background-color: var(--color-green-500);
+}
+.status__symbol--warning {
+    background-color: var(--color-orange-500);
+}
+.status__symbol--danger {
+    background-color: var(--color-rose-500);
+}
+
+.status__label,
+.category__label {
+    text-wrap-mode: nowrap;
+}
+
+.category__symbol {
+    background-color: transparent;
+    border: calc(var(--size-symbol) / 4) solid currentColor;
+}
+.category__symbol--standard {
+    color: var(--color-purple-500);
+}
+.category__symbol--food {
+    color: var(--color-amber-400);
+}
+
+/* Información de la sede */
+
+.sede-info {
+    --column: 1;
+
+    display: grid;
+    grid-template-columns: repeat(var(--column), minmax(0, 1fr));
+    gap: calc(var(--spacing) * 8);
+    margin-bottom: 0;
+    background: white;
+    padding: calc(var(--spacing) * 8) 0;
+
+    @media (min-width: 768px) {
+        --column: 2;
+    }
+}
+
+.sede-info__image img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.sede-info__details {
+    color: var(--color-zinc-800);
+}
+
+.sede-info__title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+}
+
+.sede-info__description {
 }

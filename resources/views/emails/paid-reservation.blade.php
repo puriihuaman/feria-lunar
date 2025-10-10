@@ -10,7 +10,7 @@ Tu stand en **{{ $sede->title }}** queda **confirmado y reservado**.
 
 ## 🧾 Detalles:  
 **🏠 Sede:** {{ $sede->title }}  
-**📍 Ubicación:** {{ $sede->address ?? 'Por confirmar' }}  
+**📍 Dirección:** {{ $sede->address ?? 'Por confirmar' }}  
 **📅 Fecha:** {{ \Carbon\Carbon::parse($reserva->reservation_date)->format('d/m/Y') }}  
 **🪧 Stand N°:** {{ $stand->booth_number }}  
 **💰 Total Pagado:** S/ {{ number_format($reserva->price, 2) }}

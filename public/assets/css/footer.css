@@ -1,13 +1,13 @@
 .footer {
     --columns: 1;
 
-    padding: 2rem 0;
-    color: var(--color-slate-50);
-    background-color: var(--color-blue-950);
+    padding: calc(var(--spacing) * 8) 0;
+    color: var(--color-zinc-50);
+    background-color: var(--color-zinc-950);
 }
 .footer__content {
     display: grid;
-    gap: 1.5rem;
+    gap: calc(var(--spacing) * 4);
     grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
 
     @media (min-width: 768px) {
@@ -19,12 +19,16 @@
     }
 }
 
-.widget,
-.widget-1 {
-    padding: 0;
+.widget {
+    color: var(--color-zinc-300);
+
+    & strong {
+        color: var(--color-zinc-50);
+    }
 }
 
 .widget-title {
+    color: var(--color-zinc-50);
     font-weight: var(--font-weight-semibold);
     font-size: var(--text-lg);
 }

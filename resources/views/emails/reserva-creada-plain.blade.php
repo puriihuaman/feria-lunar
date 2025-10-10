@@ -9,7 +9,7 @@ Para confirmar tu participación, debes **realizar el pago completo** dentro del
 🧾 Detalles de la Reserva:
 ------------------------------------------------------------
 🏠 Sede:: {{ $sede->title }}
-📍 Ubicación: {{ $sede->address }}
+📍 Dirección: {{ $sede->address }}
 🪧 Stand N°: {{ $stand->booth_number }}
 🏷️ Categoría: {{ ucfirst($stand->category) }}
 💰 Total: S/ {{ number_format($reserva->price, 2) }}
@@ -38,7 +38,7 @@ Inclúyelo como mensaje al momento de enviar tu comprobante de pago.
 - Pasado este tiempo, el stand será **liberado automáticamente**.  
 - Envía el comprobante de pago por **WhatsApp** al número **906542477**, junto con tu código de validación.
 
-Una vez confirmado el pago, recibirás un **correo final de confirmación** con los detalles de tu stand y ubicación dentro del evento.
+Una vez confirmado el pago, recibirás un **correo final de confirmación** con los detalles de tu stand y dirección de la sede del evento.
 
 ------------------------------------------------------------
 Equipo Feria Lunar
