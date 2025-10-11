@@ -43,16 +43,6 @@
                     </p>
                 </div>
             </div>
-    
-            @if ($errors->any())
-              <div class="alert danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-              </div>
-            @endif
         </section>
     
         <section class="reservation__group">
@@ -61,18 +51,26 @@
             <form  id="reservaForm" method="POST" action="{{ route('reservas.store') }}" class="reservation__form form">
                 @csrf
           
-                <input 
-                    type="hidden" 
-                    name="sede_stand_id" 
-                    id="sede_stand_id" 
-                    value="{{ $sedeStand->id }}"
-                    required/>
-                <input 
-                    type="hidden" 
-                    name="reservation_date" 
-                    id="reservation_date" 
-                    value="{{ $selectedDateToReserve }}"
-                    required/>
+                <div class="form__field">
+                    <input 
+                        type="hidden" 
+                        name="sede_stand_id" 
+                        id="sede_stand_id" 
+                        value="{{ $sedeStand->id }}"
+                        required/>
+                    @error('sede_stand_id')
+                    <small class="danger">{{ $message }}</small>
+                    @enderror
+                    <input 
+                        type="hidden" 
+                        name="reservation_date" 
+                        id="reservation_date" 
+                        value="{{ $selectedDateToReserve }}"
+                        required/>
+                    @error('reservation_date')
+                    <small class="danger">{{ $message }}</small>
+                    @enderror
+                </div>
           
                 <div class="form__field">
                     <label for="name" class="form__label">Nombre</label>
@@ -83,9 +81,11 @@
                         class="form__control" 
                         value="{{ old('name') }}" 
                         placeholder="Fernando..."
-                        
+                        required
                         />
-                    @error('name') <small class="alert danger">{{ $message }}</small>@enderror
+                    @error('name')
+                    <small class="danger">{{ $message }}</small>
+                    @enderror
                 </div>
           
                 <div class="form__field">
@@ -97,10 +97,10 @@
                         class="form__control" 
                         value="{{ old('surname') }}" 
                         placeholder="Fernandez" 
-                        
+                        required
                         />
                     @error('surname')
-                        <small class="text-danger">{{ $message }}</small>
+                    <small class="danger">{{ $message }}</small>
                     @enderror
                 </div>
           
@@ -112,10 +112,10 @@
                         id="email" 
                         class="form__control" 
                         value="{{ old('email') }}" placeholder="fernando@example.com"
-                        
+                        required
                         />
                     @error('email')
-                        <small class="text-danger">{{ $message }}</small>
+                    <small class="danger">{{ $message }}</small>
                     @enderror
                 </div>
           
@@ -128,10 +128,10 @@
                         class="form__control" 
                         value="{{ old('phone') }}" 
                         placeholder="999 999 999"
-                        
+                        required
                         />
                     @error('phone')
-                        <small class="text-danger">{{ $message }}</small>
+                    <small class="danger">{{ $message }}</small>
                     @enderror
                 </div>
           
@@ -143,10 +143,10 @@
                         id="captcha" 
                         class="form__control" 
                         placeholder="Escribe la respuesta"
-                        
+                        required
                         />
                     @error('captcha')
-                        <small class="alert-danger">{{ $message }}</small>
+                    <small class="danger">{{ $message }}</small>
                     @enderror
                 </div>
           
@@ -156,17 +156,19 @@
                         name="termsCheck" 
                         id="termsCheck"
                         class="form__control form__control--check form-check-input"
-                        
+                        required
                         />
-                    <label  class="form__label form-check-label" for="termsCheck">
+                    <label  class="form__label" for="termsCheck">
                         Acepto los <a href="{{ route('terms') }}" target="_blank">Términos y Condiciones</a>.
                     </label>
-                    @error('termsCheck') <small class="danger">{{ $message }}</small> @enderror
+                    @error('termsCheck') 
+                    <small class="danger">{{ $message }}</small>
+                    @enderror
                 </div>
           
                 <button type="submit" class="button form__button">Confirmar Reserva</button>
           
-                <div id="errorAlert" class="alert danger"></div>
+                <div id="errorAlert" class="danger"></div>
             </form>
         </section>
     </div>
@@ -176,7 +178,7 @@
 @section('footer-scripts')
 <script>
 document.getElementById('reservaForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Evita el envío inmediato
+    e.preventDefault();
 
     const sede_stand_id = document.getElementById('sede_stand_id').value.trim();
     const reservation_date = document.getElementById('reservation_date').value.trim();
@@ -206,7 +208,7 @@ document.getElementById('reservaForm').addEventListener('submit', function(e) {
         errorAlert.classList.remove('d-none');
     } else {
         errorAlert.classList.add('d-none');
-        this.submit(); // Si todo está correcto, envía el formulario
+        this.submit();
     }
 });
 </script>
